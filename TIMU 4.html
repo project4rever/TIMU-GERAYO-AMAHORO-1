@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIMU - Kwemeza Ikinyabiziga</title>
+    <link rel="stylesheet" href="TIMU 4.css">
+</head>
+<body>
+   <!-- Enhanced Logo at the Top -->
+    <div class="logo-container">
+        <img src="TIMU Log.png" alt="TIMU Logo" class="logo">
+    </div>
+    
+    <!-- Menu Button -->
+    <div class="menu-button" id="menuButton">
+        <i>☰</i> MENU
+    </div>
+    
+    <!-- Menu Dropdown -->
+    <div class="menu-dropdown" id="menuDropdown">
+        <a href="return.html" class="menu-item">
+            <i>↩️</i> GARUKA
+        </a>
+        <a href="catalogy.html" class="menu-item">
+            <i>📚</i> SOMA CATALOGUE
+        </a>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <h1>TIMU - Sisitemu y'Umutekano</h1>
+            <h3>Twara Ikinyabiziga Munteko Usesuye</h3>
+            <p>umwirondoro wikinyabiziga</p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <input type="text" class="input-area" maxlength="7" placeholder="Injiza plake" id="plate-input">
+        <div class="input-hint">Koresha keyboard yawe cyangwa keyboard y'urubuga</div>
+        
+        <div class="keyboard-container">
+            <div class="keyboard">
+                <div class="key" data-key="1">1</div>
+                <div class="key" data-key="2">2</div>
+                <div class="key" data-key="3">3</div>
+                <div class="key" data-key="4">4</div>
+                <div class="key" data-key="5">5</div>
+                <div class="key" data-key="6">6</div>
+                <div class="key" data-key="7">7</div>
+                <div class="key" data-key="8">8</div>
+                <div class="key" data-key="9">9</div>
+                <div class="key" data-key="0">0</div>
+                
+                <div class="key" data-key="A">A</div>
+                <div class="key" data-key="B">B</div>
+                <div class="key" data-key="C">C</div>
+                <div class="key" data-key="D">D</div>
+                <div class="key" data-key="E">E</div>
+                <div class="key" data-key="F">F</div>
+                <div class="key" data-key="G">G</div>
+                <div class="key" data-key="H">H</div>
+                <div class="key" data-key="I">I</div>
+                <div class="key" data-key="J">J</div>
+                
+                <div class="key" data-key="K">K</div>
+                <div class="key" data-key="L">L</div>
+                <div class="key" data-key="M">M</div>
+                <div class="key" data-key="N">N</div>
+                <div class="key" data-key="O">O</div>
+                <div class="key" data-key="P">P</div>
+                <div class="key" data-key="Q">Q</div>
+                <div class="key" data-key="R">R</div>
+                <div class="key" data-key="S">S</div>
+                <div class="key" data-key="-">-</div>
+                
+                <div class="key" data-key="T">T</div>
+                <div class="key" data-key="U">U</div>
+                <div class="key" data-key="V">V</div>
+                <div class="key" data-key="W">W</div>
+                <div class="key" data-key="X">X</div>
+                <div class="key" data-key="Y">Y</div>
+                <div class="key" data-key="Z">Z</div>
+                <div class="key" data-key=" " style="grid-column: span 2;">SPACE</div>
+                <div class="key" data-key="Backspace" style="grid-column: span 2;">DELETE</div>
+            </div>
+            
+            <div class="action-btns">
+                <a href="LOGIN.HTML" class="action-btn back-btn">Subira inyuma</a>
+                <a href="TIMU-6.html" class="action-btn primary-btn" id="continue-btn">Komeza</a>
+                <button class="action-btn clear-btn" id="clear-btn">Gusiba</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>Sisitemu ya TIMU | Polisi ya Rwanda | WhatsApp: 0796687461</p>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" id="success-message">
+        Plaka yemewe neza!<br>
+        <span class="countdown" id="countdown">5</span>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="key-sound" src="https://www.soundjay.com/buttons/sounds/button-09.mp3" preload="auto"></audio>
+    <audio id="success-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3" preload="auto"></audio>
+    <audio id="celebration-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-happy-crowd-celebration-953.mp3" preload="auto"></audio>
+
+    <script src="TIMU 4.js"></script>
+</body>
+</html>

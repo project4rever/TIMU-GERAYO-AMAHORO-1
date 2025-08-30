@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TIMU - Sisitemu y'Umutekano</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    :root {
+      --police-blue: #1a365d;
+      --police-green: #04f839;
+      --police-gold: #d4af37;
+      --police-red: #e53e3e;
+      --dark-background: #0a0a0a;
+      --text-color: #ffffff;
+      --neon-glow: 0 0 15px rgba(4, 248, 57, 0.5);
+      --card-bg: rgba(26, 54, 93, 0.9);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    body {
+      background: url('https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: -1;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: white;
+      border-bottom: 3px solid var(--police-green);
+      box-shadow: var(--neon-glow);
+      position: relative;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-center {
+      flex: 1;
+      text-align: center;
+      margin-left: -60px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .menu-icon {
+      font-size: 2rem;
+      cursor: pointer;
+      color: var(--police-green);
+      transition: all 0.3s ease;
+      padding: 0.5rem;
+      border-radius: 8px;
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    .menu-icon:hover, .menu-icon:focus {
+      transform: rotate(90deg);
+      text-shadow: var(--neon-glow);
+      outline: none;
+    }
+
+    .logo-container img {
+      height: 70px;
+      width: auto;
+      filter: drop-shadow(0 0 5px var(--police-green));
+      transition: transform 0.3s ease;
+      object-fit: contain;
+    }
+
+    .logo-container img:hover {
+      transform: scale(1.05);
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      margin: 0;
+      letter-spacing: 1px;
+      color: var(--police-green);
+      text-shadow: 0 0 10px rgba(4, 248, 57, 0.7);
+      animation: titleGlow 2s infinite alternate;
+    }
+
+    @keyframes titleGlow {
+      0% { text-shadow: 0 0 8px rgba(4, 248, 57, 0.5); }
+      100% { text-shadow: 0 0 20px rgba(4, 248, 57, 0.9); }
+    }
+
+    .header p {
+      margin: 0.5rem 0 0;
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    /* Navigation Menu */
+    .nav-menu {
+      position: absolute;
+      top: 100%;
+      right: 2rem;
+      background: var(--card-bg);
+      border: 1px solid var(--police-green);
+      border-radius: 8px;
+      padding: 0.5rem 0;
+      width: 300px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-menu.active {
+      display: block;
+      animation: fadeInDown 0.3s ease;
+    }
+
+    .nav-menu a {
+      display: block;
+      padding: 0.8rem 1.5rem;
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-menu a:hover, .nav-menu a:focus {
+      background: rgba(4, 248, 57, 0.2);
+      color: var(--police-green);
+      padding-left: 2rem;
+      outline: none;
+    }
+
+    .nav-menu a::after {
+      content: '';
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      background: var(--police-green);
+      border-radius: 50%;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .nav-menu a:hover::after {
+      opacity: 1;
+      left: 1.5rem;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Main Content */
+    .container {
+      flex: 1;
+      max-width: 1200px;
+      margin: 3rem auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .scan-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+      width: 100%;
+      padding: 0 1rem;
+    }
+
+    .scan-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(4, 248, 57, 0.3);
+      padding: 2rem 1.5rem;
+      border-radius: 12px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      backdrop-filter: blur(10px);
+      text-decoration: none;
+      height: 100%;
+      color: white;
+    }
+
+    .scan-btn:hover, .scan-btn:focus {
+      transform: translateY(-8px);
+      border-color: var(--police-green);
+      box-shadow: var(--neon-glow);
+      background: rgba(4, 248, 57, 0.1);
+      outline: 2px solid var(--police-green);
+      outline-offset: 2px;
+    }
+
+    .scan-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.1);
+      font-size: 2.5rem;
+      border: 3px solid;
+      transition: all 0.3s ease;
+    }
+
+    .scan-btn:hover .scan-icon {
+      transform: scale(1.1);
+      box-shadow: var(--neon-glow);
+    }
+
+    .driver-scan .scan-icon {
+      color: white;
+      border-color: var(--police-blue);
+    }
+
+    .vehicle-scan .scan-icon {
+      color: white;
+      border-color: var(--police-green);
+    }
+
+    .scan-btn h3 {
+      margin: 0;
+      color: white;
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .scan-btn p {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    /* Time Info */
+    .time-info {
+      text-align: center;
+      color: white;
+      margin: 1.5rem auto;
+      max-width: 800px;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      font-size: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .time-info span {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border-left: 3px solid var(--police-green);
+    }
+
+    /* Footer */
+    .footer {
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      text-align: center;
+      padding: 1.5rem;
+      color: white;
+      font-size: 0.95rem;
+      margin-top: auto;
+      border-top: 2px solid var(--police-green);
+    }
+
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .footer-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+      align-items: center;
+      font-size: 1rem;
+    }
+
+    .footer-info span {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .copyright {
+      margin-top: 0.8rem;
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header {
+        padding: 1rem;
+      }
+
+      .header-left, .header-right {
+        flex: 1;
+      }
+
+      .header-center {
+        margin-left: 0;
+      }
+
+      .logo-container img {
+        height: 55px;
+      }
+
+      .header h1 {
+        font-size: 1.4rem;
+      }
+
+      .header p {
+        font-size: 0.9rem;
+      }
+
+      .nav-menu {
+        right: 1rem;
+        width: 280px;
+      }
+
+      .time-info {
+        font-size: 0.9rem;
+        gap: 1rem;
+      }
+
+      .time-info span {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+      }
+
+      .footer-info {
+        gap: 0.8rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .scan-options {
+        grid-template-columns: 1fr;
+      }
+
+      .time-info {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .footer-info {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-container">
+        <a href="catalogy.html">
+          <img src="TIMU Log.png" alt="TIMU Logo">
+        </a>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <h1>TIMU - Sisitemu y'Umutekano</h1>
+      <p>Twara Ikinyabiziga Mumutekano Usesuye</p>
+    </div>
+
+    <div class="header-right">
+      <div
+        class="menu-icon"
+        id="menuBtn"
+        role="button"
+        aria-label="Navigation Menu"
+        tabindex="0"
+      >
+        ☰
+      </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="nav-menu" id="navMenu">
+      <a href="catalogy.html">Amakuru yose ya System Ibikubiyemo</a>
+      <a href="TIMU 2.html">Kwemeza Umushoferi</a>
+      <a href="TIMU 4.html">Kwemeza Ikinyabiziga</a>
+      <a href="https://www.twitch.tv/fils4rever" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-twitch"></i> ON TWITCH TV
+      </a>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+    <div class="scan-options">
+      <a href="TIMU 2.html" class="scan-btn driver-scan">
+        <div class="scan-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path>
+            <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
+          </svg>
+        </div>
+        <h3>Kwemeza Umushoferi</h3>
+        <p>Shyira urutoki ku gikoresho cyangwa scana indangamuntu ya shampita</p>
+      </a>
+
+      <a href="TIMU 4.html" class="scan-btn vehicle-scan">
+        <div class="scan-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="8" width="20" height="12" rx="2"></rect>
+            <path d="M6 8V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"></path>
+            <circle cx="16" cy="16" r="1"></circle>
+            <circle cx="8" cy="16" r="1"></circle>
+          </svg>
+        </div>
+        <h3>Kwemeza Ikinyabiziga</h3>
+        <p>Scana plake ya moto cyangwa shyira ikarita y'ikinyabiziga</p>
+      </a>
+    </div>
+  </main>
+
+  <!-- Time Info -->
+  <div class="time-info">
+    <span id="currentTime"><i class="fas fa-clock"></i> <span id="time">--:--:--</span></span>
+    <span id="currentDate"><i class="fas fa-calendar"></i> <span id="date">--/--/----</span></span>
+    <span id="ipAddress"><i class="fas fa-network-wired"></i> IP: <span id="ip">Loading...</span></span>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-info">
+        <span><i class="fas fa-shield-alt"></i> Sisitemu ya TIMU</span>
+        <span><i class="fas fa-balance-scale"></i> Polisi ya Rwanda</span>
+        <span><i class="fab fa-whatsapp"></i> 0796687461</span>
+        <span><i class="fas fa-envelope"></i> timu@police.gov.rw</span>
+      </div>
+      <div class="copyright">
+        <p>&copy; 2025 TIMU - Sisitemu y'Umutekano. Twara Ikinyabiziga Mumutekano Usesuye.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const menuBtn = document.getElementById('menuBtn');
+      const navMenu = document.getElementById('navMenu');
+
+      // Toggle menu
+      menuBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        navMenu.classList.toggle('active');
+      });
+
+      // Keyboard support for menu button
+      menuBtn.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          navMenu.classList.toggle('active');
+        }
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener('click', function (e) {
+        if (!navMenu.contains(e.target) && e.target !== menuBtn) {
+          navMenu.classList.remove('active');
+        }
+      });
+
+      // Close menu on Escape key
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          navMenu.classList.remove('active');
+        }
+      });
+
+      // Update time and date
+      function updateTime() {
+        const now = new Date();
+        document.getElementById('time').textContent = now.toLocaleTimeString();
+        document.getElementById('date').textContent = now.toLocaleDateString('rw-RW');
+      }
+
+      // Fetch and display IP
+      function updateIP() {
+        fetch('https://api.ipify.org?format=json')
+          .then(response => {
+            if (!response.ok) throw new Error('Network error');
+            return response.json();
+          })
+          .then(data => {
+            document.getElementById('ip').textContent = data.ip;
+          })
+          .catch(err => {
+            console.warn('IP fetch failed:', err);
+            document.getElementById('ip').textContent = "192.168.1.100";
+          });
+      }
+
+      // Initialize
+      updateTime();
+      updateIP();
+      setInterval(updateTime, 1000);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIMU - Sisitemu yo Guhitamo Amakosa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --dark: #2c3e50;
+            --police-green: #04f839;
+            --police-gold: #ffd700;
+            --neon-glow: 0 0 10px rgba(4, 248, 57, 0.7);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --container-bg-color: rgba(44, 62, 80, 0.85);
+            --keyboard-accent: #ecf0f1;
+            --police-blue: #0f2027;
+            --police-red: #e74c3c;
+            --info-item-bg-color: rgba(9, 15, 10, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb') no-repeat center center fixed;
+            background-size: cover;
+            color: #ddd;
+            line-height: 1.6;
+            backdrop-filter: blur(2px);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .overlay {
+            min-height: 100vh;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+            width: 95%;
+        }
+
+        .logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            height: 80px;
+            width: 80px;
+            z-index: 100;
+            border-radius: 50%;
+            border: 2px solid var(--police-green);
+            box-shadow: var(--neon-glow);
+        }
+
+        /* HEADER */
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 1rem 2rem;
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: white;
+            border-bottom: 3px solid var(--police-green);
+            box-shadow: var(--neon-glow);
+            z-index: 100;
+        }
+
+        .header-CENTER {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .header-content h1 {
+            font-size: clamp(1.6rem, 4vw, 2.2rem);
+            margin: 0;
+            letter-spacing: 1px;
+            color: var(--police-green);
+            text-shadow: 0 0 8px rgba(7, 151, 247, 0.6);
+            animation: titleGlow 3s infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 8px rgba(6, 152, 250, 0.6); }
+            100% { text-shadow: 0 0 15px rgba(5, 253, 5, 0.9); }
+        }
+
+        .header h3 {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            margin: 0.5rem 0 0;
+            color: var(--police-gold);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 0.5rem 0 0;
+            font-size: clamp(0.85rem, 2.5vw, 1rem);
+            opacity: 0.9;
+        }
+
+        /* Menu Button */
+        .menu-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--police-green);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--neon-glow);
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .menu-button:hover {
+            background: rgba(4, 248, 57, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Dropdown Menu */
+        .menu-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background: rgba(10, 10, 10, 0.85);
+            border: 2px solid #1a365d;
+            border-radius: 5px;
+            width: 200px;
+            display: none;
+            z-index: 101;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .menu-dropdown.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .menu-item {
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item:hover {
+            background: rgba(4, 248, 57, 0.2);
+            color: var(--police-green);
+            padding-left: 20px;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Faults & Summary Sections */
+        .faults-section,
+        .summary-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section-title {
+            font-size: clamp(1.4rem, 3.5vw, 1.6rem);
+            margin-bottom: 20px;
+            color: white;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+            font-weight: 600;
+        }
+
+        /* Search Box */
+        .search-box {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            font-size: 1rem;
+            padding-left: 45px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+        }
+
+        /* Category Filter */
+        .category-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn.active {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        /* Faults Grid */
+        .faults-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .fault-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            height: 180px;
+            aspect-ratio: 1 / 1;
+            position: relative;
+        }
+
+        .fault-item:hover {
+            border-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .fault-item.selected {
+            border-color: var(--success);
+            background-color: rgba(46, 204, 113, 0.1);
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);
+        }
+
+        .fault-checkbox {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--success);
+            cursor: pointer;
+        }
+
+        .fault-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+            gap: 6px;
+        }
+
+        .fault-name {
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin: 0;
+        }
+
+        .fault-desc {
+            font-size: 0.85rem;
+            color: #ccc;
+            margin: 0;
+        }
+
+        .fault-price {
+            font-weight: bold;
+            color: var(--accent);
+            font-size: 1.1rem;
+            margin-top: 4px;
+        }
+
+        /* Summary Section */
+        .summary-item,
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            color: white;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .summary-total {
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-top: 2px solid #eee;
+            margin-top: 20px;
+            padding-top: 15px;
+        }
+
+        .selected-faults {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+
+        .selected-fault {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .selected-fault:last-child {
+            border-bottom: none;
+        }
+
+        .fault-remove {
+            color: var(--accent);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            transition: color 0.2s;
+        }
+
+        .fault-remove:hover {
+            color: #c0392b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #aaa;
+            font-style: italic;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        /* Action Buttons */
+        .action-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .action-btn {
+            padding: 0.8rem 1.8rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            text-align: center;
+            text-decoration: none;
+            background: var(--success);
+            color: white;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .action-btn:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: white;
+            text-align: center;
+            padding: 1.8rem;
+            border-top: 3px solid var(--police-green);
+            box-shadow: var(--neon-glow);
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .footer-info {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .footer-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid var(--police-green);
+            min-width: 180px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .footer-item:hover {
+            background: rgba(4, 248, 57, 0.1);
+            transform: scale(1.05);
+        }
+
+        /* Results Page Styles */
+        .results-page {
+            display: none;
+        }
+
+        .vehicle-card {
+            background: var(--container-bg-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--keyboard-accent);
+        }
+
+        .vehicle-image-container {
+            position: relative;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            border-radius: 8px;
+            height: 40vh;
+            min-height: 200px;
+            max-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .vehicle-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border: 2px solid var(--keyboard-accent);
+            border-radius: 6px;
+            box-shadow: var(--neon-glow);
+        }
+
+        .plate-display {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--police-blue);
+            color: var(--keyboard-accent);
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            border: 1px solid var(--police-green);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .info-item {
+            background: var(--info-item-bg-color);
+            border-radius: 8px;
+            padding: 1rem;
+            border-left: 4px solid var(--police-green);
+            color: var(--keyboard-accent);
+        }
+
+        .violation-section {
+            margin-top: 1rem;
+            border-top: 1px solid var(--police-green);
+            padding-top: 1rem;
+        }
+
+        .violation-header {
+            color: var(--police-red);
+            margin-bottom: 1rem;
+            text-align: center;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+        }
+
+        .violation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 1rem;
+        }
+
+        .violation-item {
+            background: rgba(9, 15, 10, 0.2);
+            border-radius: 8px;
+            padding: 0.8rem;
+            text-align: center;
+            border: 1px solid var(--police-red);
+            color: var(--keyboard-accent);
+        }
+
+        .fault-description-box {
+            background: rgba(9, 15, 10, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid var(--police-red);
+            color: var(--keyboard-accent);
+        }
+
+        .deadline-notice {
+            background: rgba(9, 15, 10, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid var(--police-green);
+            color: var(--keyboard-accent);
+            text-align: center;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                width: 95%;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .header-content h1 {
+                font-size: 1.8rem;
+            }
+
+            .header h3 {
+                font-size: 1.1rem;
+            }
+
+            .menu-button {
+                top: 15px;
+                right: 15px;
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+
+            .faults-section,
+            .summary-section {
+                padding: 20px;
+            }
+
+            .section-title {
+                font-size: 1.4rem;
+            }
+
+            .faults-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 12px;
+            }
+
+            .fault-item {
+                height: 160px;
+                padding: 12px;
+            }
+
+            .fault-name {
+                font-size: 0.95rem;
+            }
+
+            .fault-price {
+                font-size: 1rem;
+            }
+
+            .footer-info {
+                gap: 1rem;
+            }
+
+            .footer-item {
+                min-width: 150px;
+                font-size: 0.85rem;
+            }
+
+            .vehicle-image-container {
+                height: 35vh;
+                max-height: 280px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                height: 60px;
+                width: 60px;
+            }
+
+            .header-content h1 {
+                font-size: 1.5rem;
+            }
+
+            .header h3 {
+                font-size: 1rem;
+            }
+
+            .menu-button {
+                padding: 7px 10px;
+                font-size: 0.85rem;
+            }
+
+            .faults-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .fault-item {
+                height: 140px;
+                aspect-ratio: 1;
+            }
+
+            .action-btn {
+                padding: 0.7rem 1.5rem;
+                font-size: 0.95rem;
+            }
+
+            .footer-item {
+                min-width: 140px;
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            .info-grid, .violation-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-btns {
+                flex-direction: column;
+            }
+
+            .vehicle-image-container {
+                height: 30vh;
+                min-height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <div class="header">
+            <div class="header-CENTER">
+                <img src="TIMU Log.png" alt="TIMU Logo" class="logo">
+                <div class="header-content">
+                    <h1>TIMU - Sisitemu y'Umutekano</h1>
+                    <h3>Twara Ikinyabiziga Mumutekano Usesuye</h3>
+                    <p>Amakosa Yutwaye ikinyabiziga</p>
+                </div>
+            </div>
+
+            <div class="menu-button" id="menuButton">
+                <i class="fas fa-bars"></i> MENU
+            </div>
+
+            <div class="menu-dropdown" id="menuDropdown">
+                <a href="twandikire.html" class="menu-item" id="adminBtn"><i>🔒</i> TWANDIKIRE</a>
+                <a href="#" class="menu-item" data-page="results"><i>📊</i> RAPORO</a>
+                <a href="ADMIN.html" class="menu-item" id="adminBtn"><i>🔒</i> ADMIN</a>
+            </div>
+        </div>
+
+        <!-- Fault Selection Page -->
+        <div class="container" id="faultsPage">
+            <div class="dashboard">
+                <div class="faults-section">
+                    <h2 class="section-title">Hitamo Amakosa</h2>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Shakisha ikosa...">
+                    </div>
+                    <div class="category-filter">
+                        <button class="category-btn active" data-category="all">Byose</button>
+                        <button class="category-btn" data-category="traffic">Amakosa yo mu nzira</button>
+                        <button class="category-btn" data-category="document">Ibyangombwa</button>
+                        <button class="category-btn" data-category="vehicle">Ikinyabiziga</button>
+                    </div>
+                    <div class="faults-grid" id="faultsGrid"></div>
+                </div>
+
+                <div class="summary-section">
+                    <h2 class="section-title">Igiteranyo</h2>
+                    <div class="summary-item">
+                        <span>UMUBARE WAYO:</span>
+                        <span id="itemsCount">0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Igiteranyo:</span>
+                        <span id="subtotal">0 FRW</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Umusoro (18%):</span>
+                        <span id="tax">0 FRW</span>
+                    </div>
+                    <div class="summary-total">
+                        <span>Umubare wose:</span>
+                        <span id="total">0 FRW</span>
+                    </div>
+                    <h3 class="section-title" style="margin-top: 25px;">Amakosa Yatowe</h3>
+                    <div class="selected-faults" id="selectedFaults">
+                        <div class="empty-state">
+                            <i class="fas fa-clipboard-list"></i>
+                            <p>Nta kosa ryatowe</p>
+                        </div>
+                    </div>
+                    <div class="action-btns">
+                        <button class="action-btn" id="saveBtn">Bika Amakuru</button>
+                        <button class="action-btn" id="viewResultsBtn">Reba Raporo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Page -->
+        <div class="container results-page" id="resultsPage">
+            <div class="vehicle-card">
+                <div class="vehicle-image-container">
+                    <img src="RAVA 4.jpg" alt="Vehicle Image" class="vehicle-image" id="vehicleImage">
+                    <div class="plate-display" id="plateDisplay">RAD 123 A</div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item"><h3>Nyir'ikinyabiziga</h3><p id="owner">Jean de Dieu N.</p></div>
+                    <div class="info-item"><h3>Ubwoko</h3><p id="vehicleType">Toyota RAV4</p></div>
+                    <div class="info-item"><h3>Umwaka</h3><p id="year">2019</p></div>
+                    <div class="info-item"><h3>Ubwishingizi</h3><p id="insurance">Yemewe</p></div>
+                    <div class="info-item"><h3>Imisoro</h3><p id="taxes">Yishyuwe</p></div>
+                    <div class="info-item"><h3>Ubuzima</h3><p id="status">Nibyo</p></div>
+                </div>
+
+                <div class="violation-section">
+                    <h3 class="violation-header">AMAKOSA YEMEWE</h3>
+                    <div class="violation-grid">
+                        <div class="violation-item">
+                            <h3>UMUBARE W'AMAKOSA</h3>
+                            <p id="violation-count">0</p>
+                        </div>
+                        <div class="violation-item">
+                            <h3>AMANDE YOSE</h3>
+                            <p id="total-fine">0 FRW</p>
+                        </div>
+                    </div>
+
+                    <div class="fault-description-box">
+                        <h3>IBISOBANURO BY'AMAKOSA:</h3>
+                        <p id="fault-description">Nta makosa yanditswe</p>
+                    </div>
+
+                    <div class="deadline-notice">
+                        <h3>IGIHE CYO KWISHYURA</h3>
+                        <p id="deadline">Muminsi 7 ishize</p>
+                    </div>
+                </div>
+
+                <div class="action-btns">
+                    <button id="smsBtn" class="action-btn sms-btn">Ohereza SMS</button>
+                    <button class="action-btn back-btn" id="backToFaultsBtn">Subira Inyuma</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Sisitemu ya TIMU | Polisi ya Rwanda | WhatsApp: 0796687461</p>
+        <div class="footer-info">
+            <div class="footer-item" id="timeDisplay">Saa: --:--:--</div>
+            <div class="footer-item" id="dateDisplay">Itariki: --/--/----</div>
+            <div class="footer-item" id="ipDisplay">IP: ----.----.----.----</div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== DATA ====================
+        let faultsData = JSON.parse(localStorage.getItem('faultsData')) || [
+            { id: 1, name: "Kwiruka", description: "Kwiruka munzira", price: 50000, category: "traffic" },
+            { id: 2, name: "Kunwa byangiza", description: "Kunwa byangiza ukoresha imodoka", price: 40000, category: "traffic" },
+            { id: 3, name: "Kutagira ibyangombwa", description: "Kutagira ibyangombwa byose", price: 25000, category: "document" },
+            { id: 4, name: "Guhagarika itara", description: "Guhagarika itara ry'umuhanda", price: 20000, category: "traffic" },
+            { id: 5, name: "Kutambika Seatbelt", description: "Kutambika Seatbelt", price: 15000, category: "vehicle" },
+            { id: 6, name: "Gukoresha telefone", description: "Gukoresha telefone ukoresha imodoka", price: 30000, category: "traffic" },
+            { id: 7, name: "Kutagira Permi", description: "Kutagira Permi yo kwinjira", price: 35000, category: "document" },
+            { id: 8, name: "Amavuta yose", description: "Kutagira amavuta mu modoka", price: 28000, category: "vehicle" }
+        ];
+
+        // Save to localStorage if not exists
+        if (!localStorage.getItem('faultsData')) {
+            localStorage.setItem('faultsData', JSON.stringify(faultsData));
+        }
+
+        let selectedFaults = [];
+        let currentCategory = "all";
+        let searchQuery = "";
+
+        // DOM Elements
+        const faultsPage = document.getElementById('faultsPage');
+        const resultsPage = document.getElementById('resultsPage');
+        const faultsGrid = document.getElementById('faultsGrid');
+        const selectedFaultsContainer = document.getElementById('selectedFaults');
+        const itemsCountElement = document.getElementById('itemsCount');
+        const subtotalElement = document.getElementById('subtotal');
+        const taxElement = document.getElementById('tax');
+        const totalElement = document.getElementById('total');
+        const searchInput = document.getElementById('searchInput');
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const saveBtn = document.getElementById('saveBtn');
+        const viewResultsBtn = document.getElementById('viewResultsBtn');
+        const backToFaultsBtn = document.getElementById('backToFaultsBtn');
+        const menuButton = document.getElementById('menuButton');
+        const menuDropdown = document.getElementById('menuDropdown');
+        const menuItems = document.querySelectorAll('.menu-item');
+        const adminBtn = document.getElementById('adminBtn');
+
+        // ================= MENU TOGGLE =================
+        menuButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!menuButton.contains(e.target) && !menuDropdown.contains(e.target)) {
+                menuDropdown.classList.remove('show');
+            }
+        });
+
+        // ================= PAGE NAVIGATION =================
+        function showPage(pageId) {
+            // Hide all pages
+            faultsPage.style.display = 'none';
+            resultsPage.style.display = 'none';
+            
+            // Show selected page
+            if (pageId === 'faults') {
+                faultsPage.style.display = 'block';
+            } else if (pageId === 'results') {
+                resultsPage.style.display = 'block';
+                loadResultsPage();
+            }
+            
+            // Close menu
+            menuDropdown.classList.remove('show');
+        }
+
+        menuItems.forEach(item => {
+            const page = item.getAttribute('data-page');
+            if (page) {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showPage(page);
+                });
+            }
+        });
+
+        // View results button
+        viewResultsBtn.addEventListener('click', () => {
+            if (selectedFaults.length === 0) {
+                alert("Hitamo amakosa mbere yo kureba raporo");
+                return;
+            }
+            saveData();
+            showPage('results');
+        });
+
+        // Back to faults button
+        backToFaultsBtn.addEventListener('click', () => {
+            showPage('faults');
+        });
+
+        // Admin button
+        adminBtn.addEventListener('click', () => {
+            const password = prompt("Andika ijambo banga rya ADMIN:");
+            if (password === "admin123") {
+                window.location.href = "ADMIN.html";
+            } else {
+                alert("Ijambo banga ntabwo ari ryo!");
+            }
+        });
+
+        // ================= FAULTS =================
+        function init() {
+            renderFaults();
+            renderSelectedFaults();
+            updateSummary();
+            setupEventListeners();
+        }
+
+        function renderFaults() {
+            if (!faultsGrid) return;
+            faultsGrid.innerHTML = '';
+
+            const filtered = faultsData.filter(fault => {
+                const matchesCategory = currentCategory === 'all' || fault.category === currentCategory;
+                const matchesSearch = fault.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                      fault.description.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                faultsGrid.innerHTML = `<div class="empty-state"><p>Nta kosa ribonetse</p></div>`;
+                return;
+            }
+
+            // Grid logic
+            const count = filtered.length;
+            let cols, rows, totalSlots;
+
+            if (count <= 8) {
+                cols = 4; rows = 4; totalSlots = 16;
+            } else if (count === 9) {
+                cols = 5; rows = 4; totalSlots = 20;
+            } else {
+                cols = 5; rows = 5; totalSlots = 25;
+            }
+
+            faultsGrid.style.display = "grid";
+            faultsGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+            // Render actual faults
+            filtered.forEach(fault => {
+                const isSelected = selectedFaults.some(f => f.id === fault.id);
+                const div = document.createElement('div');
+                div.className = `fault-item ${isSelected ? 'selected' : ''}`;
+                div.dataset.id = fault.id;
+
+                div.innerHTML = `
+                    <input type="checkbox" class="fault-checkbox" ${isSelected ? 'checked' : ''}>
+                    <div class="fault-info">
+                        <div class="fault-name">${fault.name}</div>
+                        <div class="fault-desc">${fault.description}</div>
+                        <div class="fault-price">${fault.price.toLocaleString('rw-RW')} FRW</div>
+                    </div>
+                `;
+                faultsGrid.appendChild(div);
+            });
+
+            // Fill empty slots
+            const emptySlots = totalSlots - filtered.length;
+            for (let i = 0; i < emptySlots; i++) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.className = 'fault-item empty';
+                emptyDiv.innerHTML = `<div class="fault-info"><div class="fault-name">-</div></div>`;
+                faultsGrid.appendChild(emptyDiv);
+            }
+        }
+
+        function renderSelectedFaults() {
+            if (!selectedFaultsContainer) return;
+            
+            if (selectedFaults.length === 0) {
+                selectedFaultsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <p>Nta kosa ryatowe</p>
+                    </div>
+                `;
+                return;
+            }
+
+            selectedFaultsContainer.innerHTML = '';
+            selectedFaults.forEach(fault => {
+                const div = document.createElement('div');
+                div.className = 'selected-fault';
+                div.innerHTML = `
+                    <div>
+                        <strong>${fault.name}</strong>
+                        <p>${fault.description}</p>
+                    </div>
+                    <div>
+                        <strong>${fault.price.toLocaleString('rw-RW')} FRW</strong>
+                        <button class="fault-remove" data-id="${fault.id}">&times;</button>
+                    </div>
+                `;
+                selectedFaultsContainer.appendChild(div);
+            });
+
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.fault-remove').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = parseInt(e.target.dataset.id);
+                    removeFault(id);
+                });
+            });
+        }
+
+        function updateSummary() {
+            const itemsCount = selectedFaults.length;
+            const subtotal = selectedFaults.reduce((sum, fault) => sum + fault.price, 0);
+            const tax = subtotal * 0.18;
+            const total = subtotal + tax;
+
+            if (itemsCountElement) itemsCountElement.textContent = itemsCount;
+            if (subtotalElement) subtotalElement.textContent = `${subtotal.toLocaleString('rw-RW')} FRW`;
+            if (taxElement) taxElement.textContent = `${tax.toLocaleString('rw-RW')} FRW`;
+            if (totalElement) totalElement.textContent = `${total.toLocaleString('rw-RW')} FRW`;
+        }
+
+        function toggleFault(id) {
+            const fault = faultsData.find(f => f.id === id);
+            if (!fault) return;
+
+            const index = selectedFaults.findIndex(f => f.id === id);
+            if (index === -1) {
+                selectedFaults.push(fault);
+            } else {
+                selectedFaults.splice(index, 1);
+            }
+
+            renderFaults();
+            renderSelectedFaults();
+            updateSummary();
+        }
+
+        function removeFault(id) {
+            selectedFaults = selectedFaults.filter(f => f.id !== id);
+            renderFaults();
+            renderSelectedFaults();
+            updateSummary();
+        }
+
+        function setupEventListeners() {
+            // Fault selection
+            if (faultsGrid) {
+                faultsGrid.addEventListener('click', (e) => {
+                    const faultItem = e.target.closest('.fault-item');
+                    if (faultItem) {
+                        const id = parseInt(faultItem.dataset.id);
+                        toggleFault(id);
+                    }
+                });
+            }
+
+            // Search
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    searchQuery = e.target.value;
+                    renderFaults();
+                });
+            }
+
+            // Category filter
+            categoryButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    categoryButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentCategory = btn.dataset.category;
+                    renderFaults();
+                });
+            });
+
+            // Save button
+            if (saveBtn) {
+                saveBtn.addEventListener('click', saveData);
+            }
+        }
+
+        function saveData() {
+            if (selectedFaults.length === 0) {
+                alert("Nta kosa ryatowe. Hitamo amakosa mbere.");
+                return;
+            }
+
+            // Save to localStorage
+            const data = {
+                selectedFaults,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('violationData', JSON.stringify(data));
+            
+            alert("Amakuru yabitswe neza!");
+        }
+
+        // ================= RESULTS PAGE =================
+        function loadResultsPage() {
+            // Get data from localStorage
+            const data = JSON.parse(localStorage.getItem('violationData')) || { selectedFaults: [] };
+            
+            // Update violation count and total fine
+            const violationCount = data.selectedFaults.length;
+            const totalFine = data.selectedFaults.reduce((sum, fault) => sum + fault.price, 0);
+            
+            document.getElementById('violation-count').textContent = violationCount;
+            document.getElementById('total-fine').textContent = `${totalFine.toLocaleString('rw-RW')} FRW`;
+            
+            // Update fault descriptions
+            const faultDescription = data.selectedFaults.length > 0 
+                ? data.selectedFaults.map(f => `${f.name}: ${f.description} (${f.price.toLocaleString('rw-RW')} FRW)`).join('; ')
+                : "Nta makosa yanditswe";
+            
+            document.getElementById('fault-description').textContent = faultDescription;
+            
+            // Set deadline (7 days from now)
+            const deadlineDate = new Date();
+            deadlineDate.setDate(deadlineDate.getDate() + 7);
+            const formattedDate = deadlineDate.toLocaleDateString('rw-RW', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+            
+            document.getElementById('deadline').textContent = `Kuwa ${formattedDate}`;
+        }
+
+        // ================= UTILITY FUNCTIONS =================
+        function updateDateTime() {
+            const now = new Date();
+            
+            // Update time
+            const timeElement = document.getElementById('timeDisplay');
+            if (timeElement) {
+                timeElement.textContent = `Saa: ${now.toLocaleTimeString('rw-RW')}`;
+            }
+            
+            // Update date
+            const dateElement = document.getElementById('dateDisplay');
+            if (dateElement) {
+                dateElement.textContent = `Itariki: ${now.toLocaleDateString('rw-RW')}`;
+            }
+            
+            // Update IP (simulated)
+            const ipElement = document.getElementById('ipDisplay');
+            if (ipElement) {
+                ipElement.textContent = `IP: 192.168.1.1`;
+            }
+        }
+
+        // SMS functionality
+        document.getElementById('smsBtn').addEventListener('click', function() {
+            const phone = prompt("Andika numero ya telefoni:");
+            if (phone) {
+                alert(`Ubutumwa bwo kwishyura amande bwoherejwe kuri ${phone}`);
+            }
+        });
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+            
+            // Set initial page
+            showPage('faults');
+        });
+    </script>
+</body>
+</html>

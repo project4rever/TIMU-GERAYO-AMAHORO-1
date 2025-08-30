@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TIMU – Secure Access</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+      overflow: hidden;
+      color: white;
+    }
+
+    /* Background slideshow */
+    .bg-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .bg-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .bg-slide.active {
+      opacity: 1;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(0, 0, 0, 0.7);
+      border-bottom: 3px solid #04f839;
+      position: relative;
+      z-index: 10;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-container svg {
+      height: 50px;
+      margin-right: 15px;
+    }
+
+    .header-center {
+      text-align: center;
+      flex: 1;
+    }
+
+    .header-center h1 {
+      color: #04f839;
+      font-size: 1.8rem;
+      text-shadow: 0 0 10px rgba(4, 248, 57, 0.6);
+      margin-bottom: 5px;
+    }
+
+    .header-center p {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .menu-icon {
+      font-size: 1.8rem;
+      background: none;
+      border: none;
+      color: #04f839;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+
+    .menu-icon:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Main content */
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: calc(100vh - 80px);
+      padding: 20px;
+    }
+
+    .card {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 2rem;
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      max-width: 550px;
+      width: 100%;
+      box-shadow: 0 0 30px rgba(4, 248, 57, 0.3);
+    }
+
+    .input-display {
+      min-height: 70px;
+      border: 2px solid #04f839;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      letter-spacing: 8px;
+      margin-bottom: 1.5rem;
+      background: rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .input-display::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(4, 248, 57, 0.1), transparent);
+      animation: shine 2s infinite;
+    }
+
+    @keyframes shine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* Keyboard */
+    .keyboard-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .keyboard-top {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+    }
+
+    .caps-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    .caps-btn.active {
+      background: #04f839;
+      color: #000;
+    }
+
+    .keyboard {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 8px;
+    }
+
+    .key {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 6px;
+      text-align: center;
+      padding: 15px 0;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s;
+      font-weight: bold;
+    }
+
+    .key:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .key:active {
+      transform: translateY(1px);
+    }
+
+    .key.back {
+      grid-column: span 2;
+      background: #e53e3e;
+    }
+
+    .key.back:hover {
+      background: #ff4d4d;
+    }
+
+    /* Keyboard mode indicator */
+    .keyboard-mode {
+      text-align: center;
+      margin: 15px 0;
+      font-size: 0.9rem;
+      color: #ffd700;
+      opacity: 0.8;
+    }
+
+    /* Actions */
+    .actions {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+      min-width: 120px;
+      text-align: center;
+    }
+
+    .clear {
+      background: #e53e3e;
+      color: #fff;
+    }
+
+    .clear:hover {
+      background: #ff4d4d;
+      transform: translateY(-2px);
+    }
+
+    .back-link {
+      background: linear-gradient(90deg, #d4af37, #0b88fd);
+      color: #111;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .continue {
+      background: #04f839;
+      color: #111;
+      display: none;
+    }
+
+    .continue:hover {
+      background: #1aff4d;
+      transform: translateY(-2px);
+    }
+
+    /* Success message */
+    .success {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.9);
+      padding: 15px 25px;
+      border: 2px solid #04f839;
+      border-radius: 10px;
+      color: #04f839;
+      font-weight: bold;
+      z-index: 100;
+      box-shadow: 0 0 20px rgba(4, 248, 57, 0.5);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.05); }
+      100% { transform: translateX(-50%) scale(1); }
+    }
+
+    /* Menu Overlay */
+    .menu-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .menu-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .menu-content {
+      background: rgba(30, 30, 40, 0.95);
+      padding: 2rem;
+      border-radius: 15px;
+      max-width: 500px;
+      width: 90%;
+      border: 1px solid #04f839;
+      box-shadow: 0 0 30px rgba(4, 248, 57, 0.5);
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+
+    .menu-overlay.active .menu-content {
+      transform: translateY(0);
+    }
+
+    .close-menu {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: #04f839;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+
+    .close-menu:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .menu-title {
+      color: #04f839;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    .menu-options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .menu-option {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .menu-option:hover {
+      background: rgba(4, 248, 57, 0.2);
+      border-color: #04f839;
+      transform: translateY(-3px);
+    }
+
+    .menu-option.active {
+      background: rgba(4, 248, 57, 0.3);
+      border-color: #04f839;
+      box-shadow: 0 0 15px rgba(4, 248, 57, 0.5);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .keyboard {
+        grid-template-columns: repeat(6, 1fr);
+      }
+      
+      .header-center h1 {
+        font-size: 1.4rem;
+      }
+      
+      .header-center p {
+        font-size: 0.8rem;
+      }
+      
+      .card {
+        padding: 1.5rem;
+      }
+      
+      .input-display {
+        font-size: 2rem;
+        min-height: 60px;
+      }
+      
+      .key {
+        padding: 12px 0;
+        font-size: 0.9rem;
+      }
+      
+      .actions {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .keyboard {
+        grid-template-columns: repeat(5, 1fr);
+      }
+      
+      .header {
+        padding: 0.8rem 1rem;
+      }
+      
+      .header-center h1 {
+        font-size: 1.2rem;
+      }
+      
+      .card {
+        padding: 1rem;
+      }
+      
+      .input-display {
+        font-size: 1.5rem;
+        min-height: 50px;
+      }
+      
+      .key {
+        padding: 10px 0;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background slideshow -->
+  <div class="bg-container" id="bgContainer"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-container">
+        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#04f839" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8 12H16" stroke="#04f839" stroke-width="2" stroke-linecap"round" stroke-linejoin="round"/>
+          <path d="M12 8V16" stroke="#04f839" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h2>TIMU</h2>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <h1>TIMU - Sisitemu y'Umutekano</h1>
+      <p>Twara Ikinyabiziga Mumutekano Usesuye</p>
+    </div>
+
+    <div class="header-right">
+      <button class="menu-icon" id="openMenuBtn">☰</button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="container">
+    <div class="card">
+      <div id="display" class="input-display"></div>
+
+      <div class="keyboard-section">
+        <div class="keyboard-top">
+          <button id="capsKey" class="caps-btn active" aria-pressed="true">⇪ Caps</button>
+        </div>
+        <div id="keyboard" class="keyboard"></div>
+      </div>
+
+      <div class="keyboard-mode">Use external keyboard or on-screen keyboard</div>
+
+      <div class="actions">
+        <button class="btn clear" id="clearBtn">Siba</button>
+        <a href="LOGIN.HTML" class="btn back-link">⬅️ Subira Inyuma</a>
+        <button class="btn continue" id="continueBtn">Continue ➡️</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Success toast -->
+  <div id="success" class="success">✅ Kode yemewe! Noneza Continue buto</div>
+
+  <!-- Menu Overlay -->
+  <div class="menu-overlay" id="menuOverlay">
+    <div class="menu-content">
+      <button class="close-menu" id="closeMenu">×</button>
+      <h2 class="menu-title">TIMU Security Options</h2>
+      <div class="menu-options">
+        <button class="menu-option active" id="keyboardMode">On-Screen Keyboard</button>
+        <button class="menu-option" id="externalMode">External Keyboard</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Elements
+    const display = document.getElementById("display");
+    const keyboard = document.getElementById("keyboard");
+    const clearBtn = document.getElementById("clearBtn");
+    const continueBtn = document.getElementById("continueBtn");
+    const successBox = document.getElementById("success");
+    const menuOverlay = document.getElementById("menuOverlay");
+    const openMenuBtn = document.getElementById("openMenuBtn");
+    const closeMenu = document.getElementById("closeMenu");
+    const keyboardModeCard = document.getElementById("keyboardMode");
+    const externalModeCard = document.getElementById("externalMode");
+    const capsKey = document.getElementById("capsKey");
+    const bgContainer = document.getElementById("bgContainer");
+
+    // State
+    let input = "";
+    const correctCode = "B4r";
+    let currentMode = "keyboard";
+    let capsLock = true;
+    let backgroundIndex = 0;
+    let backgroundSlides = [];
+    let autoRedirectTimer = null;
+
+    // Backgrounds
+    const backgrounds = [
+      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1546443044-ed4dcadb79a7?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1555421689-491a97ff2040?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1550439062-609e1531270e?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1555421689-491a97ff2040?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1546443044-ed4dcadb79a7?auto=format&fit=crop&w=1920&q=80"
+    ];
+
+    // Initialize background slides
+    function initBackgrounds() {
+      for (let i = 0; i < backgrounds.length; i++) {
+        const slide = document.createElement("div");
+        slide.className = "bg-slide";
+        slide.style.backgroundImage = `url("${backgrounds[i]}")`;
+        bgContainer.appendChild(slide);
+        backgroundSlides.push(slide);
+      }
+      backgroundSlides[0].classList.add("active");
+    }
+
+    function changeBackground() {
+      backgroundSlides[backgroundIndex].classList.remove("active");
+      backgroundIndex = (backgroundIndex + 1) % backgroundSlides.length;
+      backgroundSlides[backgroundIndex].classList.add("active");
+    }
+
+    // Set up background slideshow
+    initBackgrounds();
+    setInterval(changeBackground, 2000);
+
+    // On-screen keyboard
+    const baseKeys = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"];
+    function renderKeyboard() {
+      keyboard.innerHTML = "";
+      baseKeys.forEach(k => {
+        const btn = document.createElement("div");
+        btn.className = "key";
+        btn.textContent = capsLock ? k.toUpperCase() : k.toLowerCase();
+        btn.onclick = () => handleKey(btn.textContent);
+        keyboard.appendChild(btn);
+      });
+      const back = document.createElement("div");
+      back.className = "key back";
+      back.textContent = "← Back";
+      back.onclick = backspace;
+      keyboard.appendChild(back);
+    }
+
+    function toggleCapsLock() {
+      capsLock = !capsLock;
+      capsKey.classList.toggle("active", capsLock);
+      renderKeyboard();
+    }
+
+    // Input handling
+    function handleKey(k) {
+      if (input.length < 6) {
+        input += k;
+        updateDisplay();
+      }
+    }
+
+    function backspace() {
+      input = input.slice(0, -1);
+      updateDisplay();
+    }
+
+    function updateDisplay() {
+      display.textContent = "●".repeat(input.length);
+      if (input === correctCode) {
+        successBox.style.display = "block";
+        continueBtn.style.display = "inline-block";
+        
+        // Auto redirect after 5 seconds
+        if (autoRedirectTimer) clearTimeout(autoRedirectTimer);
+        autoRedirectTimer = setTimeout(() => {
+          window.location.href = "TIMU 3.html"; // Fixed the filename (space instead of dash)
+        }, 5000);
+      } else {
+        successBox.style.display = "none";
+        continueBtn.style.display = "none";
+        if (autoRedirectTimer) clearTimeout(autoRedirectTimer);
+      }
+    }
+
+    // External keyboard
+    document.addEventListener("keydown", (e) => {
+      if (currentMode !== "external") return;
+      
+      if (/^[a-zA-Z0-9]$/.test(e.key)) {
+        const char = capsLock ? e.key.toUpperCase() : e.key.toLowerCase();
+        handleKey(char);
+      } else if (e.key === "Backspace") {
+        backspace();
+      } else if (e.key === "Escape") {
+        input = "";
+        updateDisplay();
+      } else if (e.key.toLowerCase() === "capslock") {
+        toggleCapsLock();
+      }
+    });
+
+    // Buttons
+    clearBtn.addEventListener("click", () => { 
+      input = ""; 
+      updateDisplay(); 
+    });
+    
+    continueBtn.addEventListener("click", () => { 
+      window.location.href = "TIMU 3.html"; // Fixed the filename (space instead of dash)
+    });
+
+    // Menu
+    openMenuBtn.addEventListener("click", () => { 
+      menuOverlay.classList.add("active"); 
+    });
+    
+    closeMenu.addEventListener("click", () => { 
+      menuOverlay.classList.remove("active"); 
+    });
+    
+    keyboardModeCard.addEventListener("click", () => { 
+      currentMode = "keyboard"; 
+      keyboardModeCard.classList.add("active");
+      externalModeCard.classList.remove("active");
+      menuOverlay.classList.remove("active"); 
+    });
+    
+    externalModeCard.addEventListener("click", () => { 
+      currentMode = "external"; 
+      externalModeCard.classList.add("active");
+      keyboardModeCard.classList.remove("active");
+      menuOverlay.classList.remove("active"); 
+    });
+
+    // Caps lock toggle
+    capsKey.addEventListener("click", toggleCapsLock);
+
+    // Init
+    renderKeyboard();
+    updateDisplay();
+  </script>
+</body>
+</html>

@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TIMU - Sisitemu y'Umutekano</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    :root {
+      --police-blue: #1a365d;
+      --police-green: #04f839;
+      --police-gold: #d4af37;
+      --police-red: #e53e3e;
+      --dark-background: #0a0a0a;
+      --keyboard-base: #0a0a0a;
+      --keyboard-accent: #bbfc54;
+      --keyboard-light: #fc0404;
+      --keyboard-hover: #4fd1c5;
+      --button-background: #05ddfa;
+      --button-hover: #07dffc;
+      --neon-glow: 0 0 10px rgba(122, 228, 145, 0.8);
+      --shadow: 0 4px 15px rgba(5, 221, 250, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    body {
+      background: url('TIMU Log.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #04f504;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: -1;
+    }
+
+    /* Logo Container */
+    .logo-container {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 50%;
+      padding: 8px;
+      border: 2px solid var(--police-green);
+      box-shadow: 0 0 15px rgba(4, 248, 57, 0.5);
+      transition: all 0.3s ease;
+    }
+
+    .logo-container:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(4, 248, 57, 0.8);
+    }
+
+    .logo {
+      height: 60px;
+      width: 60px;
+      object-fit: contain;
+      border-radius: 50%;
+      background: white;
+      padding: 4px;
+    }
+
+    /* Menu Button */
+    .menu-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid var(--police-green);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: var(--neon-glow);
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+    }
+
+    .menu-button:hover {
+      background: rgba(4, 248, 57, 0.2);
+      transform: scale(1.05);
+    }
+
+    /* Dropdown Menu */
+    .menu-dropdown {
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background: var(--dark-background);
+      border: 2px solid var(--police-blue);
+      border-radius: 5px;
+      width: 200px;
+      display: none;
+      z-index: 101;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+    }
+
+    .menu-dropdown.show {
+      display: block;
+      animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .menu-item {
+      padding: 12px 15px;
+      color: white;
+      text-decoration: none;
+      display: block;
+      transition: all 0.2s ease;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+
+    .menu-item:hover {
+      background: rgba(4, 248, 57, 0.2);
+      color: var(--police-green);
+      padding-left: 20px;
+    }
+
+    .menu-item i {
+      margin-right: 10px;
+      color: var(--police-green);
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: white;
+      border-bottom: 3px solid var(--police-green);
+      box-shadow: var(--neon-glow);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpolygon points='0,0 100,0 100,100' fill='rgba(4, 248, 57, 0.1)'/%3E%3C/svg%3E");
+      background-size: 100% 100%;
+      opacity: 0.3;
+      z-index: 0;
+    }
+
+    .header h1 {
+      font-size: clamp(1.6rem, 5vw, 2.2rem);
+      margin: 0;
+      color: var(--police-green);
+      text-shadow: 0 0 8px rgba(7, 151, 247, 0.6);
+      animation: titleGlow 3s infinite alternate;
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes titleGlow {
+      0% { text-shadow: 0 0 8px rgba(6, 152, 250, 0.6); }
+      100% { text-shadow: 0 0 15px rgba(5, 253, 5, 0.9); }
+    }
+
+    .header p {
+      margin: 0.5rem 0 0;
+      font-size: clamp(0.9rem, 3vw, 1.1rem);
+      opacity: 0.9;
+      color: var(--police-gold);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      flex: 1;
+      width: 95%;
+    }
+
+    /* Alert Banner */
+    .alert-banner {
+      background: linear-gradient(135deg, rgba(229, 62, 62, 0.9), rgba(26, 54, 93, 0.7));
+      border: 2px solid var(--police-red);
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1.5rem 0;
+      text-align: center;
+      animation: pulse 2s infinite;
+      color: white;
+      font-weight: bold;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    /* Login Section */
+    .login-section {
+      background: linear-gradient(135deg, rgba(26, 54, 93, 0.9), rgba(10, 10, 10, 0.8));
+      border: 2px solid var(--police-blue);
+      border-radius: 15px;
+      padding: 1.8rem;
+      margin: 2rem 0;
+      text-align: center;
+      box-shadow: var(--neon-glow);
+    }
+
+    .login-section h2 {
+      color: var(--police-gold);
+      margin-bottom: 1.3rem;
+      font-size: clamp(1.4rem, 4vw, 1.8rem);
+    }
+
+    .login-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--button-background), var(--police-blue));
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow);
+      min-width: 160px;
+      text-align: center;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, var(--button-hover), var(--police-green));
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(5, 221, 250, 0.5);
+    }
+
+    /* Stats Section */
+    .stats-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1.2rem;
+      margin: 2rem 0;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(26, 54, 93, 0.8));
+      border: 1px solid var(--police-gold);
+      border-radius: 10px;
+      padding: 1.2rem;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: scale(1.05);
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--police-green);
+    }
+
+    .stat-label {
+      color: var(--police-gold);
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Feature Cards */
+    .main-content,
+    .bottom-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .feature-card {
+      background: linear-gradient(135deg, rgba(26, 54, 93, 0.8), rgba(10, 10, 10, 0.9));
+      border: 2px solid var(--police-green);
+      border-radius: 15px;
+      padding: 1.8rem;
+      box-shadow: var(--neon-glow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      min-height: 360px;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 20px rgba(4, 248, 57, 0.6);
+    }
+
+    .feature-card h3 {
+      color: var(--police-gold);
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .feature-card p {
+      color: #ffffff;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      flex-grow: 1;
+    }
+
+    .feature-card ul {
+      color: var(--police-green);
+      margin-left: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .feature-card li {
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .icon {
+      font-size: 1.6rem;
+    }
+
+    /* SMS Example */
+    .sms-example {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      border-left: 4px solid var(--police-green);
+    }
+
+    .sms-example p {
+      color: var(--police-gold);
+      font-style: italic;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Footer */
+    .footer {
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: white;
+      font-size: 0.9rem;
+      padding: 1.5rem 1rem;
+      margin-top: auto;
+      border-top: 2px solid var(--police-green);
+      text-align: center;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-info {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.2rem;
+      font-size: 0.9rem;
+    }
+
+    .footer-info span {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .copyright {
+      margin-top: 0.8rem;
+      opacity: 0.8;
+    }
+
+    /* Responsive */
+
+    @media (max-width: 768px) {
+      .logo {
+        height: 50px;
+        width: 50px;
+        padding: 3px;
+      }
+
+      .logo-container {
+        padding: 6px;
+      }
+
+      .header h1 {
+        font-size: 1.6rem;
+      }
+
+      .header p {
+        font-size: 1rem;
+      }
+
+      .container {
+        padding: 1rem;
+      }
+
+      .login-section {
+        padding: 1.5rem 1rem;
+      }
+
+      .login-buttons {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      .btn {
+        width: 100%;
+        font-size: 1rem;
+        padding: 12px;
+      }
+
+      .main-content,
+      .bottom-row {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+      }
+
+      .feature-card {
+        min-height: auto;
+        padding: 1.5rem;
+      }
+
+      .footer-info {
+        gap: 0.8rem;
+      }
+
+      .footer-info span {
+        font-size: 0.85rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header h1 {
+        font-size: 1.4rem;
+      }
+
+      .header p {
+        font-size: 0.9rem;
+      }
+
+      .alert-banner {
+        font-size: 0.9rem;
+        padding: 0.8rem;
+      }
+
+      .stat-number {
+        font-size: 1.6rem;
+      }
+
+      .stat-label {
+        font-size: 0.85rem;
+      }
+
+      .sms-example p {
+        font-size: 0.85rem;
+      }
+
+      .footer-info span {
+        font-size: 0.8rem;
+      }
+
+      .copyright {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Logo -->
+  <div class="logo-container">
+    <img src="TIMU Log.png" alt="TIMU Logo" class="logo" />
+  </div>
+
+  <!-- Menu Button -->
+  <div class="menu-button" id="menuButton">
+    <i class="fas fa-bars"></i> MENU
+  </div>
+
+  <!-- Dropdown Menu -->
+  <div class="menu-dropdown" id="menuDropdown">
+    <a href="LOGIN.HTML" class="menu-item">
+      <i>↩️</i> GARUKA
+    </a>
+    <a href="catalog.html" class="menu-item">
+      <i>📚</i> SOMA CATALOGUE
+    </a>
+  </div>
+
+  <!-- Header -->
+  <div class="header">
+    <h1>TIMU - SISITEMU Y'UMUTEKANO</h1>
+    <p>RAPOLO Y'UTWARA IKINYABIZIZGA GIHARIWE</p>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="alert-banner">
+      <strong>🚨 UBUTUMWA BWIHUTIRWA:</strong> Sistema ya TIMU irakoze 24/7 kugira ngo ikurinde umutekano mu muhanda
+    </div>
+
+    <div class="login-section">
+      <h2>🔐 Injira muri Sistema</h2>
+      <div class="login-buttons">
+        <button class="btn" onclick="loginFingerprint()">👆 Injira na Fingerprint</button>
+        <button class="btn" onclick="loginPassword()">🔑 Injira n'Ijambo ry'Ibanga</button>
+      </div>
+    </div>
+
+    <div class="stats-section">
+      <div class="stat-card">
+        <span class="stat-number">24/7</span>
+        <span class="stat-label">Igihe Irakorera</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">100%</span>
+        <span class="stat-label">Umutekano</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">∞</span>
+        <span class="stat-label">Amakuru Yakira</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">SMS</span>
+        <span class="stat-label">Ubutumwa Bwihuse</span>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="feature-card">
+        <h3><span class="icon">👤</span> Amakuru y'Abantu</h3>
+        <p>Sistema ikubika amakuru yawe mu buryo bwizewe:</p>
+        <ul>
+          <li>Kwinjiza ukoresheje fingerprint cyangwa password</li>
+          <li>Polisi ikabona amakuru yawe byihuse</li>
+          <li>Gushyiraho amakosa y'umuhanda n'ibihano</li>
+          <li>Kwishura amande no gukuraho amakosa</li>
+          <li>Amateka yose akabikwa neza</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <h3><span class="icon">🚗</span> Amakuru y'Ibinyabiziga</h3>
+        <p>Kubona amakuru menshi y'ikinyabiziga:</p>
+        <ul>
+          <li>Kwinjiza licence plate number</li>
+          <li>Kubona amakuru yose y'ikinyabiziga</li>
+          <li>Ifoto n'amakuru birambuye</li>
+          <li>Amateka y'amakosa n'ibihano</li>
+          <li>Ububasha bw'ikinyabiziga</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="bottom-row">
+      <div class="feature-card">
+        <h3><span class="icon">💾</span> Database Yizewe</h3>
+        <p>Amakuru yose akabikwa mu buryo bwizewe:</p>
+        <ul>
+          <li>Encryption ya data yose</li>
+          <li>Backup ya buri munsi</li>
+          <li>Ububasha bwo kugarura amakuru</li>
+          <li>Gufunga neza amakuru y'ibanga</li>
+          <li>Uburenganzira bwo kubona amakuru</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <h3><span class="icon">🇷🇼</span> Urugero rw'Ubutumwa bw'SMS</h3>
+        <p><strong>Igisubozo cya SMS ugira iyo amakuru yawe akoreshejwe:</strong></p>
+        <div class="sms-example">
+          <p>
+            "POLISI Y'U RWANDA: Uragushumura kubera amakuru yawe uyihaye bibereye - INTARA: AMAJUSHO, AKARERE: KAMUHANGA, UMURENGE: NYAMABUYE, AKAGARI: KAGAHOGO, UMUDUGUDU: RUVUMERA. Tariki: 04/08/2025, Saa: 14:30. Murakoze!"
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-info">
+        <span><i class="fas fa-shield-alt"></i> Sisitemu ya TIMU</span>
+        <span><i class="fas fa-balance-scale"></i> Polisi ya Rwanda</span>
+        <span><i class="fab fa-whatsapp"></i> 0796687461</span>
+        <span><i class="fas fa-envelope"></i> timu@police.gov.rw</span>
+      </div>
+      <div class="copyright">
+        &copy; 2025 TIMU System. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    const menuButton = document.getElementById('menuButton');
+    const menuDropdown = document.getElementById('menuDropdown');
+
+    menuButton.addEventListener('click', function (e) {
+      e.stopPropagation();
+      menuDropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!menuButton.contains(e.target) && !menuDropdown.contains(e.target)) {
+        menuDropdown.classList.remove('show');
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        menuDropdown.classList.remove('show');
+      }
+    });
+
+    function loginFingerprint() {
+      alert("Sistema ya fingerprint ikora - Fata uruhare rw'ikiboko kuri sensor.");
+    }
+
+    function loginPassword() {
+      const password = prompt("Andika ijambo ry'ibanga:");
+      if (password) {
+        alert("Injira ikora neza! Murakaza neza muri TIMU System.");
+      }
+    }
+  </script>
+</body>
+</html>

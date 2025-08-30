@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twandikire - TIMU</title>
+  <link rel="stylesheet" href="twandikire.css" />
+  <!-- Preload background for faster loading -->
+  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1507842282355-e813c86637e9?auto=format&fit=crop&q=80&w=1600" />
+</head>
+<body>
+  <header class="header">
+    <h1>Twandikire</h1>
+    <p>Sangira igitekerezo cyawe cyangwa ikibazo cyawe hano</p>
+    <nav class="nav-menu">
+      <a href="TIMU-6.html">Ahabanza</a>
+      <a href="twandikire.html" aria-current="page">Twandikire</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="form-section" aria-labelledby="form-title">
+      <h2 id="form-title">Andika Igitekerezo</h2>
+      <form id="commentForm" novalidate>
+        <label for="commentInput" class="sr-only">Igitekerezo cyawe</label>
+        <textarea
+          id="commentInput"
+          placeholder="Andika igitekerezo cyawe hano..."
+          aria-required="true"
+          required
+        ></textarea>
+        <button type="submit" class="btn-submit">Ohereza</button>
+      </form>
+    </section>
+
+    <section class="comments-section" aria-labelledby="comments-title">
+      <h2 id="comments-title">Ibitekerezo Byose</h2>
+      <div id="commentsBox" class="comments-box" role="list">
+        <!-- Comments will be dynamically inserted here -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <p>© 2025 Sisitemu ya TIMU | Polisi ya Rwanda</p>
+  </footer>
+
+  <script src="twandikire.js" defer></script>
+</body>
+</html>

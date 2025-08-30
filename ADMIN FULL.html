@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIMU - Sisitemu y'Umutekano</title>
+    <link rel="stylesheet" href="ADMIN FULL.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="overlay">
+    <!-- Header Section -->
+    <div class="header">
+        <!-- Logo left -->
+        <img src="TIMU Log.png" alt="TIMU Logo" class="logo">
+
+        <!-- Title center -->
+        <div class="header-content">
+            <h1>TIMU - Sisitemu y'Umutekano</h1>
+            <h3>Twara Ikinyabiziga Mumutekano Usesuye</h3>
+            <p>Amakosa Yutwaye ikinyabiziga</p>
+        </div>
+
+        <!-- Menu right -->
+        <button id="menuButton" class="menu-button"><i class="fas fa-bars"></i> Menu</button>
+        <div id="menuDropdown" class="menu-dropdown">
+            <a href="TIMU-6.html" class="menu-item"><i>↩️</i> SUBIRA INYUMA</a>
+            <a href="catalogy.html" class="menu-item"><i>📚</i> SOMA CATALOGUE</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Fault Form Panel -->
+        <div class="fault-panel">
+            <h2 id="formTitle">Shyiraho Ikosa Gishya</h2>
+            <form id="faultForm">
+                <input type="hidden" id="faultId" name="faultId">
+                <div class="form-group">
+                    <label for="name">Izina ry'Ikosa</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Ibisobanuro</label>
+                    <textarea id="description" name="description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="price">Igiciro (FRW)</label>
+                    <input type="number" id="price" name="price" required>
+                </div>
+                <div class="form-group">
+                    <label for="category">Icyiciro</label>
+                    <select id="category" name="category" required>
+                        <option value="traffic">Amakosa yo mu nzira</option>
+                        <option value="document">Ibyangombwa</option>
+                        <option value="vehicle">Ikinyabiziga</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit">Emeza</button>
+            </form>
+        </div>
+
+        <!-- Fault List Panel -->
+        <div class="fault-panel">
+            <h2>Urutonde rw'Amakosa</h2>
+            <div id="faultsList" class="faults-list-content"></div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Footer Section -->
+    <div class="footer">
+        <p>Sisitemu ya TIMU | Polisi ya Rwanda | WhatsApp: 0796687461</p>
+        <div class="footer-info">
+            <div class="footer-item" id="timeDisplay">Saa: --:--:--</div>
+            <div class="footer-item" id="dateDisplay">Itariki: --/--/----</div>
+            <div class="footer-item" id="ipDisplay">IP: ----.----.----.----</div>
+        </div>
+    </div>
+</div>
+
+<script src="ADMIN FULL.js"></script>
+</body>
+</html>

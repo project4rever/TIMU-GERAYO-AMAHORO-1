@@ -1,0 +1,977 @@
+
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TIMU - Police & Admin</title>
+  <style>
+    :root {
+      --green: #04f839;
+      --panel: #141b27;
+      --police-blue: #a5c9ff; 
+      --police-green: #04f839;
+      --text-light: #e0e7ff;
+      --text-dark: #1a365d;
+      --police-gold: #d4af37;
+      --police-red: #e53e3e;
+      --dark-bg: #0a0a0a;
+      --container-bg: rgba(10, 10, 20, 0.5); /* More transparent */
+      --section-bg: rgba(30, 30, 40, 0.4);   /* More transparent */
+      --neon-glow: 0 0 10px rgba(122, 228, 145, 0.8);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1950&q=80') 
+        no-repeat center center fixed;
+      background-size: cover;
+      color: var(--text-light);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 10px;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: -1;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      background: var(--dark-bg);
+      border-bottom: 3px solid var(--police-green);
+      border-radius: 10px 10px 0 0;
+      box-shadow: var(--neon-glow);
+    }
+    header h1 {
+      margin: 0;
+      color: var(--police-gold);
+      font-size: 22px;
+      text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+    }
+    .footer {
+      text-align: center;
+      padding: 12px;
+      background: var(--dark-bg);
+      border-top: 3px solid var(--police-green);
+      color: #ddd;
+      margin-top: auto;
+      border-radius: 0 0 10px 10px;
+    }
+    .main-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 1200px;
+      margin: 20px auto;
+      width: 100%;
+      background: var(--container-bg);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    }
+    .layout {
+      display: flex;
+      gap: 25px;
+      margin: 15px 0;
+      flex-wrap: wrap;
+    }
+    .col {
+      flex: 1;
+      min-width: 300px;
+      padding: 25px;
+      border-radius: 12px;
+      background: var(--section-bg);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+      border: 1px solid #444;
+    }
+    h2 {
+      margin-top: 0;
+      color: var(--police-gold);
+      border-bottom: 2px solid var(--police-green);
+      padding-bottom: 10px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      color: var(--police-green);
+      font-weight: bold;
+    }
+    select, input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #666;
+      background: rgba(60, 60, 60, 0.6);
+      color: white;
+      font-size: 16px;
+    }
+    .btn {
+      padding: 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 700;
+      margin-top: 15px;
+      width: 100%;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+    .btn.primary {
+      background: var(--police-green);
+      color: #000;
+    }
+    .btn.ghost {
+      background: transparent;
+      border: 2px solid var(--police-green);
+      color: var(--police-green);
+    }
+    .btn.danger {
+      background: #ff4444;
+      color: white;
+    }
+    .btn.success {
+      background: #00c853;
+      color: white;
+    }
+    .fault-item {
+      background: rgba(60, 60, 60, 0.5);
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 4px solid var(--police-green);
+    }
+    .fault-item span {
+      font-weight: bold;
+      color: var(--police-gold);
+    }
+    .fault-details {
+      flex: 1;
+    }
+    .fault-price {
+      font-size: 18px;
+      min-width: 120px;
+      text-align: right;
+    }
+    /* ADMIN PANEL */
+    #adminPanel {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--container-bg);
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 700px;
+      max-height: 85vh;
+      overflow: auto;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      border: 2px solid var(--police-green);
+    }
+    #adminPanel h2 {
+      color: var(--police-gold);
+      text-align: center;
+    }
+    .admin-fault {
+      display: flex;
+      gap: 10px;
+      margin: 10px 0;
+      align-items: center;
+    }
+    .admin-fault input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #666;
+      background: rgba(70, 70, 70, 0.6);
+      color: white;
+    }
+    .admin-fault .remove-btn {
+      background: #ff4444;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .admin-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .admin-buttons .btn {
+      width: auto;
+      flex: 1;
+    }
+    #closeAdmin {
+      background: #ff4444;
+      color: white;
+      font-weight: 700;
+    }
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 999;
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      background: var(--police-green);
+      color: black;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      z-index: 1001;
+      display: none;
+    }
+    .total-section {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(60, 60, 60, 0.5);
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+      border: 1px solid var(--police-gold);
+      font-size: 18px;
+    }
+    .driver-info {
+      background: rgba(60, 60, 60, 0.5);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      border-left: 4px solid var(--police-gold);
+    }
+    /* Navigation Menu */
+    .nav-menu {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid var(--police-green);
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .nav-btn:hover {
+      background: var(--police-green);
+      color: black;
+    }
+    /* Driver Profile Styles */
+    #driverProfile {
+      display: none;
+    }
+    #driverProfile .header {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      border-bottom: 3px solid var(--police-green);
+      box-shadow: var(--neon-glow);
+      position: relative;
+      border-radius: 10px 10px 0 0;
+      margin: -20px -20px 20px -20px;
+    }
+    #driverProfile .header h1 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      color: var(--police-green);
+      text-shadow: 0 0 8px rgba(7, 151, 247, 0.6);
+      animation: titleGlow 3s infinite alternate;
+    }
+    @keyframes titleGlow {
+      0% { text-shadow: 0 0 8px rgba(7, 151, 247, 0.6); }
+      100% { text-shadow: 0 0 15px rgba(7, 247, 143, 0.9); }
+    }
+    #driverProfile .header h3 {
+      color: var(--police-gold);
+      margin-top: .5rem;
+    }
+    #driverProfile .header p {
+      opacity: .9;
+    }
+    .container {
+      flex: 1;
+      margin: 0 auto 2rem;
+      width: 90%;
+      max-width: 1000px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .result-section {
+      background: transparent;
+      border-radius: 15px;
+      padding: 2rem;
+      min-height: 500px;
+      width: 100%;
+    }
+    .profile-header {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .profile-photo {
+      width: 220px;
+      height: 220px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 3px solid var(--police-gold);
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .info-card {
+      background: transparent;
+      padding: 1.2rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+    .info-card h4 {
+      color: var(--police-blue);
+      margin-bottom: .5rem;
+      border-bottom: 1px solid var(--police-blue);
+      padding-bottom: 0.3rem;
+    }
+    .violations-section {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid var(--police-green);
+    }
+    .violations-section h2 {
+      text-align: center;
+      color: var(--police-red);
+      margin-bottom: 1rem;
+      text-shadow: 0 0 5px rgba(229, 62, 62, 0.5);
+    }
+    .violations-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .violation-card {
+      background: transparent;
+      padding: 1rem;
+      border-radius: 10px;
+      border: 1px solid var(--police-red);
+      transition: transform 0.3s;
+    }
+    .violation-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(229, 62, 62, 0.3);
+    }
+    .violation-card h4 {
+      color: var(--police-gold);
+      margin-bottom: .5rem;
+    }
+    .violation-card p {
+      color: var(--police-green);
+      font-weight: bold;
+    }
+    .action-btns {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    .action-btn {
+      padding: 0.8rem 1.5rem;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+    .secondary-btn {
+      background: var(--police-blue);
+      color: white;
+      border: 1px solid var(--police-green);
+    }
+    .secondary-btn:hover {
+      background: var(--police-green);
+      color: black;
+    }
+    .back-btn {
+      background: var(--police-red);
+      color: white;
+      border: 1px solid var(--police-red);
+    }
+    .back-btn:hover {
+      background: #c53030;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      background: var(--police-green);
+      color: black;
+      border-radius: 20px;
+      font-weight: bold;
+      margin-top: 0.5rem;
+    }
+    .driver-selection {
+      margin: 1rem 0;
+      text-align: center;
+    }
+    .driver-select {
+      padding: 0.5rem;
+      border-radius: 5px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      border: 1px solid var(--police-green);
+      width: 250px;
+    }
+    @media (max-width: 768px) {
+      .layout {
+        flex-direction: column;
+      }
+      .col {
+        min-width: 100%;
+      }
+      header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+      }
+      header h1 {
+        font-size: 18px;
+      }
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+      .profile-photo {
+        width: 180px;
+        height: 180px;
+      }
+      .action-btns {
+        flex-direction: column;
+        align-items: center;
+      }
+      .action-btn {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>🚓 TIMU - Sisitemu y'Umutekano</h1>
+  <div>
+    <select id="menuSelect">
+      <option value="">☰ Menu</option>
+      <option value="manageFaults">Gucunga Amakosa</option>
+      <option value="resetSystem">Ongera Utangire</option>
+      <option value="viewProfiles">Reba Abashoferi</option>
+    </select>
+  </div>
+</header>
+<div class="main-container">
+  <div class="layout">
+    <section class="col">
+      <h2>👮‍♂️ Ongeramo Ikosa</h2>
+      <div class="driver-info">
+        <strong>Umushoferi: </strong>
+        <span id="currentDriver">Nta mushoferi wahiswemo</span>
+      </div>
+      <form id="faultForm">
+        <label>Hitamo Umushoferi:</label>
+        <select id="driverSelect" required>
+          <option value="">-- Hitamo Umushoferi --</option>
+          <option>BIZIMANA Fils</option>
+          <option>MUGABO Eric</option>
+          <option>MURENZI Diane</option>
+          <option>KAMALI Jean</option>
+          <option>UWIMANA Alice</option>
+        </select>
+        <label>Hitamo Ikosa:</label>
+        <select id="faultSelect" required>
+          <option value="">-- Hitamo Ikosa --</option>
+        </select>
+        <label>Igiciro (FRW):</label>
+        <input id="price" readonly />
+        <button type="submit" class="btn primary">✔️ Emeza Ikosa</button>
+      </form>
+      <button id="continueBtn" class="btn success">➡️ Reba Umushoferi</button>
+    </section>
+    <section class="col">
+      <h2>📋 Urutonde rw'Amakosa</h2>
+      <div id="assignedList"></div>
+      <div class="total-section">
+        <span>Umubare w'Amakosa: </span><span id="totalCount">0</span> |
+        <span>Umubare w'Amafaranga: </span><span id="totalAmount">0</span> FRW
+      </div>
+    </section>
+  </div>
+</div>
+<footer class="footer">
+  TIMU | Polisi ya Rwanda | WhatsApp: 0796687461
+</footer>
+<!-- ADMIN PANEL -->
+<div class="overlay" id="overlay"></div>
+<div id="adminPanel">
+  <h2>⚙️ Gucunga Amakosa</h2>
+  <p style="text-align:center;color:#aaa;font-size:14px;margin-bottom:20px;">Hano ushobora kongeramo, gusiba, cyangwa guhindura amakosa n'ibiciro byayo</p>
+  <div id="faultAdminList"></div>
+  <div class="admin-buttons">
+    <button id="addFaultBtn" class="btn primary">➕ Ongeraho Ikosa</button>
+    <button id="saveFaultsBtn" class="btn primary">💾 Bika Amakosa</button>
+    <button id="closeAdmin" class="btn danger">✖ Funga</button>
+  </div>
+</div>
+<!-- DRIVER PROFILE SECTION (initially hidden) -->
+<div id="driverProfile">
+  <div class="header">
+    <h1>TIMU - Sisitemu y'Umutekano</h1>
+    <h3>Twara Ikinyabiziga Mumutekano Usesuye</h3>
+    <p>Uwirondoro w'utwara ikinyabiziga</p>
+    <div class="nav-menu">
+      <button class="nav-btn" onclick="showMainPage()">Ahabanza</button>
+      <button class="nav-btn" onclick="showAdminPanel()">Amakosa</button>
+    </div>
+  </div>
+  <div class="main-container">
+    <div class="driver-selection">
+      <label for="profileDriverSelect">Hitamo Umushoferi: </label>
+      <select id="profileDriverSelect" class="driver-select">
+        <option value="BIZIMANA Fils">BIZIMANA Fils</option>
+        <option value="MUGABO Eric">MUGABO Eric</option>
+        <option value="MURENZI Diane">MURENZI Diane</option>
+        <option value="KAMALI Jean">KAMALI Jean</option>
+        <option value="UWIMANA Alice">UWIMANA Alice</option>
+      </select>
+    </div>
+    <div class="result-section">
+      <div class="profile-header">
+        <img src="" class="profile-photo" id="driverPhoto">
+        <div class="profile-info">
+          <h2 id="driverName"></h2>
+          <div class="status-badge">Uruhushya rukwiye</div>
+        </div>
+      </div>
+      <div class="info-grid">
+        <div class="info-card"><h4>Numero y'uruhushya</h4><p id="licenseNumber"></p></div>
+        <div class="info-card"><h4>Icyiciro cyuruhushya</h4><p id="licenseCategory"></p></div>
+        <div class="info-card"><h4>Telephone</h4><p id="phoneNumber"></p></div>
+        <div class="info-card"><h4>Itariki yarangirira</h4><p id="expiryDate"></p></div>
+        <div class="info-card"><h4>Amakosa y'umuhanda</h4><p id="faultCount">0</p></div>
+        <div class="info-card"><h4>Aho atuye</h4><p id="address"></p></div>
+      </div>
+      <div class="violations-section">
+        <h2>Amakosa y'Umushoferi</h2>
+        <div id="violationsGrid" class="violations-grid">
+          <!-- violations will load here -->
+        </div>
+      </div>
+      <div class="action-btns">
+        <button class="action-btn secondary-btn" onclick="sendSMS()">📱 Ohereza SMS</button>
+        <button class="action-btn back-btn" onclick="showMainPage()">⬅️ Subira Inyuma</button>
+        <button class="action-btn secondary-btn" onclick="saveFaultsPermanently()">💾 Bika Amakosa</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="notification" id="notification"></div>
+<script>
+  // --- Default Faults ---
+  let faults = [
+    {id:1, name:"Kurenza umuvuduko", price:50000},
+    {id:2, name:"Kudakoresha seatbelt", price:30000},
+    {id:3, name:"Kunywa ibisindisha cyangwa ibiyobyabwenge mu gihe atwaye", price:150000},
+    {id:4, name:"Kuvugira kuri telefone atwaye", price:100000},
+    {id:5, name:"Kudaha priority ku bandi bakoreshabuhanda", price:40000},
+    {id:6, name:"Kunyura aho bitemewe (overtaking nabi, ligne continue)", price:60000},
+    {id:7, name:"Kudahagarara aho bisabwa (stop sign, traffic lights)", price:30000},
+    {id:8, name:"Kugenda ku mucyo utari uwemewe (red light)", price:100000},
+    {id:9, name:"Kwica amabwiriza y'umupolisi uri ku muhanda", price:80000},
+    {id:10, name:"Kugendera mu muhanda udakwiye (contravention lane)", price:70000}
+  ];
+  let assigned = [];
+  // Driver database with information
+  const drivers = {
+    "BIZIMANA Fils": {
+      photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80",
+      licenseNumber: "DL-2024-001",
+      licenseCategory: "A, B, C",
+      phoneNumber: "0795914094",
+      expiryDate: "31/12/2027",
+      address: "Kigali, Nyarugenge"
+    },
+    "MUGABO Eric": {
+      photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80",
+      licenseNumber: "DL-2024-002",
+      licenseCategory: "A, B",
+      phoneNumber: "0785236418",
+      expiryDate: "30/06/2026",
+      address: "Kigali, Gasabo"
+    },
+    "MURENZI Diane": {
+      photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=80",
+      licenseNumber: "DL-2024-003",
+      licenseCategory: "B, C",
+      phoneNumber: "0724569823",
+      expiryDate: "31/03/2028",
+      address: "Kigali, Kicukiro"
+    },
+    "KAMALI Jean": {
+      photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80",
+      licenseNumber: "DL-2024-004",
+      licenseCategory: "A",
+      phoneNumber: "0735698741",
+      expiryDate: "15/09/2025",
+      address: "Northern Province"
+    },
+    "UWIMANA Alice": {
+      photo: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=400&q=80",
+      licenseNumber: "DL-2024-005",
+      licenseCategory: "B",
+      phoneNumber: "0796325417",
+      expiryDate: "20/11/2026",
+      address: "Western Province"
+    }
+  };
+  // Load data from localStorage if available
+  function loadData() {
+    const savedFaults = localStorage.getItem('policeFaults');
+    const savedAssigned = localStorage.getItem('assignedFaults');
+    const savedDriver = localStorage.getItem('selectedDriver');
+    if (savedFaults) faults = JSON.parse(savedFaults);
+    if (savedAssigned) assigned = JSON.parse(savedAssigned);
+    if (savedDriver) {
+      document.getElementById('driverSelect').value = savedDriver;
+      document.getElementById('currentDriver').textContent = savedDriver;
+    }
+  }
+  // Save data to localStorage
+  function saveData() {
+    localStorage.setItem('policeFaults', JSON.stringify(faults));
+    localStorage.setItem('assignedFaults', JSON.stringify(assigned));
+    localStorage.setItem('selectedDriver', document.getElementById('driverSelect').value);
+  }
+  // Show notification
+  function showNotification(message, isSuccess = true) {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.style.background = isSuccess ? 'var(--police-green)' : '#ff4444';
+    notification.style.display = 'block';
+    setTimeout(() => {
+      notification.style.display = 'none';
+    }, 3000);
+  }
+  const faultSelect = document.getElementById("faultSelect");
+  const priceInput = document.getElementById("price");
+  const assignedList = document.getElementById("assignedList");
+  const adminPanel = document.getElementById("adminPanel");
+  const overlay = document.getElementById("overlay");
+  const faultAdminList = document.getElementById("faultAdminList");
+  const driverProfile = document.getElementById("driverProfile");
+  const mainContainer = document.querySelector(".main-container");
+  // Initialize the application
+  function initApp() {
+    loadData();
+    populateFaults();
+    renderAssigned();
+    // Set up driver selection handler
+   document.getElementById('driverSelect').addEventListener('change', function() {
+  const selectedDriver = this.value;
+  document.getElementById('currentDriver').textContent = selectedDriver || 'Nta mushoferi wahiswemo';
+  renderAssigned();
+  saveData();
+  if (selectedDriver) {
+    // Auto load into profile page
+    document.getElementById('profileDriverSelect').value = selectedDriver;
+    updateDriverProfile();
+    // Hide main form and show profile automatically
+    document.querySelector('.main-container').style.display = 'none';
+    document.getElementById('driverProfile').style.display = 'block';
+  }
+});
+    // Set up profile driver selection handler
+    document.getElementById('profileDriverSelect').addEventListener('change', updateDriverProfile);
+  }
+  function populateFaults(){
+    faultSelect.innerHTML = '<option value="">-- Hitamo Ikosa --</option>';
+    faults.forEach(f => {
+      const opt = document.createElement("option");
+      opt.value = f.id;
+      opt.textContent = `${f.name} - ${f.price.toLocaleString()} FRW`;
+      opt.dataset.price = f.price;
+      faultSelect.appendChild(opt);
+    });
+  }
+  faultSelect.addEventListener("change", () => {
+    priceInput.value = faultSelect.options[faultSelect.selectedIndex]?.dataset.price || "";
+  });
+  document.getElementById("faultForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const driver = document.getElementById("driverSelect").value;
+    const fid = faultSelect.value;
+    if(!driver) {
+      showNotification("Hitamo umushoferi mbere!", false);
+      return;
+    }
+    if(!fid) {
+      showNotification("Hitamo ikosa!", false);
+      return;
+    }
+    const fault = faults.find(f => f.id == fid);
+    assigned.push({
+      id: Date.now(),
+      driver, 
+      fault: fault.name, 
+      price: fault.price,
+      date: new Date().toLocaleString('rw-RW')
+    });
+    renderAssigned();
+    saveData();
+    showNotification("Ikosa ryemejwe neza!");
+    // Reset fault selection but keep driver
+    faultSelect.value = "";
+    priceInput.value = "";
+  });
+  function renderAssigned(){
+    assignedList.innerHTML = "";
+    const driver = document.getElementById("driverSelect").value;
+    const filtered = driver ? assigned.filter(a => a.driver === driver) : [];
+    if (filtered.length === 0) {
+      assignedList.innerHTML = '<p style="text-align:center;color:#aaa;padding:20px;">Nta makosa yanditswe kuri uyu mushoferi</p>';
+      document.getElementById("totalCount").textContent = "0";
+      document.getElementById("totalAmount").textContent = "0";
+      return;
+    }
+    let totalCount = 0;
+    let totalAmount = 0;
+    filtered.forEach(a => {
+      totalCount++;
+      totalAmount += a.price;
+      const div = document.createElement("div");
+      div.className = "fault-item";
+      div.innerHTML = `
+        <div class="fault-details">
+          <b>${a.driver}</b><br>
+          <small>${a.fault}</small><br>
+          <small>${a.date}</small>
+        </div>
+        <div class="fault-price">${a.price.toLocaleString()} FRW</div>
+      `;
+      assignedList.appendChild(div);
+    });
+    document.getElementById("totalCount").textContent = totalCount;
+    document.getElementById("totalAmount").textContent = totalAmount.toLocaleString();
+  }
+  document.getElementById("continueBtn").addEventListener("click", () => {
+    const driver = document.getElementById("driverSelect").value;
+    if(!driver) {
+      showNotification("Hitamo umushoferi mbere!", false);
+      return;
+    }
+    // Show driver profile
+    document.getElementById('profileDriverSelect').value = driver;
+    updateDriverProfile();
+    document.querySelector('.main-container').style.display = 'none';
+    document.getElementById('driverProfile').style.display = 'block';
+  });
+  // --- Menu Logic ---
+  document.getElementById("menuSelect").addEventListener("change", e => {
+    if(e.target.value === "manageFaults"){
+      const uname = prompt("Shyiramo Username kugira ngo uhindure amakosa:");
+      if(uname !== "B4r"){ 
+        showNotification("Ntubyemerewe! 🚫", false); 
+        e.target.value = ""; 
+        return; 
+      }
+      renderAdminFaults();
+      adminPanel.style.display = "block";
+      overlay.style.display = "block";
+      e.target.value = "";
+    }
+    if(e.target.value === "resetSystem") {
+      const uname = prompt("Shyiramo Username kugira ngo usubize sisitemu:");
+      if(uname !== "B4r"){ 
+        showNotification("Ntubyemerewe! 🚫", false); 
+        e.target.value = ""; 
+        return; 
+      }
+      if(confirm("Urashaka koko gusubiza sisitemu? Ibi ntibisubirana!")) {
+        assigned = [];
+        document.getElementById('driverSelect').value = "";
+        document.getElementById('currentDriver').textContent = "Nta mushoferi wahiswemo";
+        renderAssigned();
+        saveData();
+        showNotification("Sisitemu yasubijwe neza! ✔️");
+      }
+      e.target.value = "";
+    }
+    if(e.target.value === "viewProfiles") {
+      document.querySelector('.main-container').style.display = 'none';
+      document.getElementById('driverProfile').style.display = 'block';
+      e.target.value = "";
+    }
+  });
+  // --- Admin Fault Management ---
+  function renderAdminFaults(){
+    faultAdminList.innerHTML = "";
+    if (faults.length === 0) {
+      faultAdminList.innerHTML = '<p style="text-align:center;color:#aaa;">Nta makosa ahari</p>';
+      return;
+    }
+    faults.forEach((f, i) => {
+      const row = document.createElement("div");
+      row.className = "admin-fault";
+      row.innerHTML = `
+        <input type="text" value="${f.name}" data-idx="${i}" data-field="name" placeholder="Ikosa"/>
+        <input type="number" value="${f.price}" data-idx="${i}" data-field="price" placeholder="Igiciro"/>
+        <button class="remove-btn" data-idx="${i}">×</button>
+      `;
+      faultAdminList.appendChild(row);
+    });
+    // Add event listeners to remove buttons
+    document.querySelectorAll('.remove-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const idx = this.dataset.idx;
+        faults.splice(idx, 1);
+        renderAdminFaults();
+      });
+    });
+  }
+  document.getElementById("addFaultBtn").addEventListener("click", () => {
+    faults.push({id: Date.now(), name:"Ikosa Rishya", price:0});
+    renderAdminFaults();
+  });
+  document.getElementById("saveFaultsBtn").addEventListener("click", () => {
+    const inputs = faultAdminList.querySelectorAll("input");
+    inputs.forEach(inp => {
+      const idx = inp.dataset.idx;
+      const field = inp.dataset.field;
+      faults[idx][field] = field === "price" ? Number(inp.value) : inp.value;
+    });
+    populateFaults();
+    saveData();
+    showNotification("Amakosa yabitswe neza ✔️");
+    setTimeout(() => {
+      adminPanel.style.display = "none";
+      overlay.style.display = "none";
+    }, 1500);
+  });
+  document.getElementById("closeAdmin").addEventListener("click", () => {
+    adminPanel.style.display = "none";
+    overlay.style.display = "none";
+  });
+  overlay.addEventListener("click", () => {
+    adminPanel.style.display = "none";
+    overlay.style.display = "none";
+  });
+  // --- Driver Profile Functions ---
+  function updateDriverProfile() {
+    const selectedDriver = document.getElementById('profileDriverSelect').value;
+    const driverData = drivers[selectedDriver];
+    // Update profile information
+    document.getElementById('driverName').textContent = selectedDriver;
+    document.getElementById('driverPhoto').src = driverData.photo;
+    document.getElementById('licenseNumber').textContent = driverData.licenseNumber;
+    document.getElementById('licenseCategory').textContent = driverData.licenseCategory;
+    document.getElementById('phoneNumber').textContent = driverData.phoneNumber;
+    document.getElementById('expiryDate').textContent = driverData.expiryDate;
+    document.getElementById('address').textContent = driverData.address;
+    // Load and display violations for this driver
+    loadDriverViolations(selectedDriver);
+  }
+  function loadDriverViolations(driverName) {
+    // Get violations from localStorage
+    const allViolations = JSON.parse(localStorage.getItem("assignedFaults")) || [];
+    // Filter violations for this driver
+    const driverViolations = allViolations.filter(v => v.driver === driverName);
+    // Update fault count
+    document.getElementById('faultCount').textContent = driverViolations.length;
+    // Display violations
+    const violationsGrid = document.getElementById('violationsGrid');
+    violationsGrid.innerHTML = "";
+    if (driverViolations.length === 0) {
+      violationsGrid.innerHTML = "<p style='text-align:center;grid-column:1/-1;color:#aaa;'>Nta kosa ryabonetse.</p>";
+    } else {
+      driverViolations.forEach(violation => {
+        const card = document.createElement("div");
+        card.className = "violation-card";
+        card.innerHTML = `
+          <h4>${violation.fault}</h4>
+          <p>RWF ${violation.price.toLocaleString()}</p>
+          <p><small>${violation.date || ""}</small></p>
+        `;
+        violationsGrid.appendChild(card);
+      });
+    }
+  }
+  function showMainPage() {
+    document.getElementById('driverProfile').style.display = 'none';
+    document.querySelector('.main-container').style.display = 'flex';
+  }
+  function showAdminPanel() {
+    const uname = prompt("Shyiramo Username kugira ngo uhindure amakosa:");
+    if(uname !== "B4r"){ 
+      showNotification("Ntubyemerewe! 🚫", false); 
+      return; 
+    }
+    renderAdminFaults();
+    adminPanel.style.display = "block";
+    overlay.style.display = "block";
+  }
+  function sendSMS() {
+    const driver = document.getElementById('profileDriverSelect').value;
+    const phone = document.getElementById('phoneNumber').textContent;
+    alert(`SMS yoherejwe kuri ${driver} (${phone})!`);
+  }
+  function saveFaultsPermanently() {
+    const selectedDriver = document.getElementById('profileDriverSelect').value;
+    const allViolations = JSON.parse(localStorage.getItem("assignedFaults")) || [];
+    const driverViolations = allViolations.filter(v => v.driver === selectedDriver);
+    if(driverViolations.length === 0) {
+      alert("Nta makosa yanditswe kuri " + selectedDriver);
+      return;
+    }
+    const permanentFaults = JSON.parse(localStorage.getItem("permanentFaults")) || {};
+    permanentFaults[selectedDriver] = driverViolations;
+    localStorage.setItem("permanentFaults", JSON.stringify(permanentFaults));
+    alert(`Amakosa ${driverViolations.length} ya ${selectedDriver} yabitse neza!`);
+  }
+  // Initialize the app
+  initApp();
+</script>
+</body>
+</html>
